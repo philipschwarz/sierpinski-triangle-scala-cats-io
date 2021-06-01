@@ -1,0 +1,1 @@
+Scala 3 cats-effect based code for [Sierpinski Triangle - Polyglot FP for Fun and Profit - Haskell and Scala](https://www.slideshare.net/pjschwarz/sierpinski-triangle-polyglot-fp-for-fun-and-profit-haskell-and-scala-with-minor-corrections).
