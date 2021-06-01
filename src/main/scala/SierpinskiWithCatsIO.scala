@@ -2,7 +2,6 @@ import java.awt.{Color, Graphics}
 import javax.swing.{JPanel, JFrame}
 import cats.effect.unsafe.implicits._
 import cats.effect.IO
-//import cats.implicits._
 
 class SierpinskiJPanel(x:Int,
                        y: Int,
@@ -15,16 +14,7 @@ class SierpinskiJPanel(x:Int,
     sierpinskiTriangle(g).unsafeRunSync()
 
   def sierpinskiTriangle(g: Graphics): IO[Unit] =
-    // IO{ g.setColor(colour) } >> sierpinskiTriangle(g, x, y, size)
-     IO{ g.setColor(colour) } flatMap { _ => sierpinskiTriangle(g, x, y, size) }
-    //    List(
-    //      IO{ g.setColor(colour) },
-    //      sierpinskiTriangle(g, x, y, size)
-    //    ).sequence_
-    //    for
-    //      _ <- IO{ g.setColor(colour) }
-    //      _ <- sierpinskiTriangle(g, x, y, size)
-    //    yield ()
+    IO{ g.setColor(colour) } >> sierpinskiTriangle(g, x, y, size)
 
   def sierpinskiTriangle(g: Graphics, x: Int, y: Int, size: Int): IO[Unit] =
     if size <= minSize
@@ -32,25 +22,9 @@ class SierpinskiJPanel(x:Int,
       fillTriangle(g, x, y, size)
     else
       val halfSize = size / 2
-//      sierpinskiTriangle(g, x, y, halfSize) >>
-//      sierpinskiTriangle(g, x, y - halfSize, halfSize) >>
-//      sierpinskiTriangle(g, x + halfSize, y, halfSize)
-
-      sierpinskiTriangle(g, x, y, halfSize) flatMap { _ =>
-        sierpinskiTriangle(g, x, y - halfSize, halfSize) flatMap { _ =>
-          sierpinskiTriangle(g, x + halfSize, y, halfSize)
-        }
-      }
-
-//        List( sierpinskiTriangle(g, x, y, halfSize),
-//              sierpinskiTriangle(g, x, y - halfSize, halfSize),
-//              sierpinskiTriangle(g, x + halfSize, y, halfSize)
-//        ).sequence_
-//      for
-//        _ <- sierpinskiTriangle(g, x, y, halfSize)
-//        _ <- sierpinskiTriangle(g, x, y - halfSize, halfSize)
-//        _ <- sierpinskiTriangle(g, x + halfSize, y, halfSize)
-//      yield ()
+      sierpinskiTriangle(g, x, y, halfSize) >>
+      sierpinskiTriangle(g, x, y - halfSize, halfSize) >>
+      sierpinskiTriangle(g, x + halfSize, y, halfSize)
 
   def fillTriangle(g: Graphics, x: Int, y: Int, size: Int): IO[Unit] =
     val xs = Array(x, x + size, x)
